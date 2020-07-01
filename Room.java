@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 /**
  * Class Room - a room in an adventure game.
  *
@@ -14,11 +15,13 @@
  */
 public class Room 
 {
-    public String description;
-    public Room northExit;
-    public Room southExit;
-    public Room eastExit;
-    public Room westExit;
+    private String description;
+    private Room northExit;
+    private Room southExit;
+    private Room eastExit;
+    private Room westExit;
+    private Room upExit;
+    private Room downExit;
 
     /**
      * Create a room described "description". Initially, it has
@@ -39,7 +42,7 @@ public class Room
      * @param south The south exit.
      * @param west The west exit.
      */
-    public void setExits(Room north, Room east, Room south, Room west) 
+    public void setExits(Room north, Room east, Room south, Room west, Room down, Room up)
     {
         if(north != null) {
             northExit = north;
@@ -53,6 +56,12 @@ public class Room
         if(west != null) {
             westExit = west;
         }
+        if(down != null) {
+            downExit = down;
+        }
+        if(up != null) {
+            upExit = up;
+        }
     }
 
     /**
@@ -61,6 +70,63 @@ public class Room
     public String getDescription()
     {
         return description;
+    }
+
+    /**
+     * Get room info of the direction
+     *
+     * @param direction direction of room (north, east, south, west, up, down)
+     * @return Room of direction
+     */
+    public Room getExit(String direction) {
+
+        switch (direction.toLowerCase()) {
+            case "north":
+                return northExit;
+            case "east":
+                return eastExit;
+            case "south":
+                return southExit;
+            case "west":
+                return westExit;
+            case "down":
+                return downExit;
+            case "up":
+                return upExit;
+            default:
+                return null;
+        }
+
+    }
+
+    /**
+     * Return a string of all exits of the room.
+     * @return a description of the existing exits in the room
+     */
+    public String getExitString() {
+        String result = "Exits: ";
+        if(northExit != null) {
+            result += "north, ";
+        }
+        if(eastExit != null) {
+            result += "east, ";
+        }
+        if(southExit != null) {
+            result += "south, ";
+        }
+        if(westExit != null) {
+            result += "west, ";
+        }
+        if(downExit != null) {
+            result += "down, ";
+        }
+        if(upExit != null) {
+            result += "up, ";
+        }
+        //delete comma at end
+        result.substring(0,result.length()-1);
+
+        return result;
     }
 
 }
