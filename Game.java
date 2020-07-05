@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 /**
  *  This class is the main class of the "World of Zuul" application. 
  *  "World of Zuul" is a very simple, text based adventure game.  Users 
@@ -19,6 +20,7 @@ public class Game
 {
     private Parser parser;
     private Room currentRoom;
+    private ArrayList<String> backpack;
         
     /**
      * Create the game and initialise its internal map.
@@ -34,29 +36,46 @@ public class Game
      */
     private void createRooms()
     {
-        Room store, canteen, office1, office2, office3, office4, stockroom, outside;
+        Room store, canteen, office1, office2, stockroom, outside, lowStairwell, highStairwell, wc;
       
         // create the rooms
         store = new Room("the storeroom");
         canteen = new Room("in the company canteen");
         office1 = new Room("in an office");
         office2 = new Room("in an office");
-        office3 = new Room("in an office");
-        office4 = new Room("in an office");
+        wc = new Room("wc");
         stockroom = new Room("in the stockroom");
         outside = new Room("outside the store");
+        lowStairwell =  new Room("lower Stairwell");
+        highStairwell =  new Room("upper Stairwell");
 
         // initialise room exits
-        store.setExits(null, null, canteen, null, null,null);
-        canteen.setExits(store, office1, office4, null, null,null);
-        office1.setExits(null, null, office2, canteen, null,null);
-        office2.setExits(office1, null, null, office3, null,null);
-        office3.setExits(null, office2, null, office4, null,null);
-        office1.setExits(canteen, office3, null, stockroom, null,null);
-        stockroom.setExits(null, office4, null, outside, null,null);
-        outside.setExits(null, stockroom, null, null, null,null);
+        store.setExits("north", outside);
+        store.setExits("south", stockroom);
 
-        currentRoom = canteen;  // start game in canteen
+        stockroom.setExits("north", store);
+        stockroom.setExits("east", lowStairwell);
+
+        lowStairwell.setExits("west", stockroom);
+        lowStairwell.setExits("up", highStairwell);
+
+        highStairwell.setExits("west", canteen);
+        highStairwell.setExits("down", lowStairwell);
+
+        canteen.setExits("north", office1);
+        canteen.setExits("east", highStairwell);
+        canteen.setExits("south", wc);
+        canteen.setExits("west", office2);
+
+        office1.setExits("south", canteen);
+
+        wc.setExits("north", canteen);
+        wc.setObjects("toothbrush");
+
+        office2.setExits("east", canteen);
+        office2.setExits("west", outside);
+
+        currentRoom = store;  // start game in store
     }
 
     /**
@@ -91,9 +110,7 @@ public class Game
     }
 
     private void printLocationInfo(){
-        System.out.println("You are " + currentRoom.getDescription());
-        System.out.print(currentRoom.getExitString());
-
+        System.out.println(currentRoom.getLongDescription());
     }
 
     /**
@@ -120,6 +137,15 @@ public class Game
         else if (commandWord.equals("quit")) {
             wantToQuit = quit(command);
         }
+        else if (commandWord.equals("look")) {
+            look();
+        }
+        else if (commandWord.equals("find")) {
+            find(command);
+        }
+        else if (commandWord.equals("grab")) {
+            grab(command);
+        }
 
         return wantToQuit;
     }
@@ -137,7 +163,7 @@ public class Game
         System.out.println("around at the university.");
         System.out.println();
         System.out.println("Your command words are:");
-        System.out.println("   go quit help");
+        parser.showCommands();
     }
 
     /** 
@@ -181,5 +207,41 @@ public class Game
             return true;  // signal that we want to quit
         }
     }
+
+    private void look(){
+        System.out.println(currentRoom.getLongDescription());
+    }
+
+    private void find(Command command){
+        if(!command.hasSecondWord()) {
+            // if there is no second word, we don't know what to find...
+            System.out.println("Find what?");
+            return;
+        }
+
+        String object = command.getSecondWord();
+
+        if (currentRoom.containsObject(object)) {
+            System.out.println("You found " + object + "!");
+        }
+        else {
+            System.out.println("This room doesn't contain " + object + ".");
+        }
+    }
+
+    private void grab(Command command){
+        if(!command.hasSecondWord()) {
+            // if there is no second word, we don't know what to grab...
+            System.out.println("Grab what?");
+            return;
+        }
+
+        String object = command.getSecondWord();
+
+        if (currentRoom.containsObject(object)) {
+            this.backpack.add(object);
+        }
+    }
+
 
 }

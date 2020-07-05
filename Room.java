@@ -1,4 +1,7 @@
+import java.util.HashMap;
+import java.util.Set;
 import java.util.ArrayList;
+
 /**
  * Class Room - a room in an adventure game.
  *
@@ -16,12 +19,8 @@ import java.util.ArrayList;
 public class Room 
 {
     private String description;
-    private Room northExit;
-    private Room southExit;
-    private Room eastExit;
-    private Room westExit;
-    private Room upExit;
-    private Room downExit;
+    private HashMap<String, Room> exits;
+    private ArrayList<String> objects;
 
     /**
      * Create a room described "description". Initially, it has
@@ -32,36 +31,19 @@ public class Room
     public Room(String description) 
     {
         this.description = description;
+        this.exits = new HashMap<>();
+        this.objects = new ArrayList<>();
     }
 
     /**
      * Define the exits of this room.  Every direction either leads
      * to another room or is null (no exit there).
-     * @param north The north exit.
-     * @param east The east east.
-     * @param south The south exit.
-     * @param west The west exit.
+     * @param direction The direction of exit.
+     * @param neighbor The room in that direction.
      */
-    public void setExits(Room north, Room east, Room south, Room west, Room down, Room up)
+    public void setExits(String direction, Room neighbor)
     {
-        if(north != null) {
-            northExit = north;
-        }
-        if(east != null) {
-            eastExit = east;
-        }
-        if(south != null) {
-            southExit = south;
-        }
-        if(west != null) {
-            westExit = west;
-        }
-        if(down != null) {
-            downExit = down;
-        }
-        if(up != null) {
-            upExit = up;
-        }
+        this.exits.put(direction, neighbor);
     }
 
     /**
@@ -79,24 +61,7 @@ public class Room
      * @return Room of direction
      */
     public Room getExit(String direction) {
-
-        switch (direction.toLowerCase()) {
-            case "north":
-                return northExit;
-            case "east":
-                return eastExit;
-            case "south":
-                return southExit;
-            case "west":
-                return westExit;
-            case "down":
-                return downExit;
-            case "up":
-                return upExit;
-            default:
-                return null;
-        }
-
+        return this.exits.get(direction);
     }
 
     /**
@@ -105,28 +70,34 @@ public class Room
      */
     public String getExitString() {
         String result = "Exits: ";
-        if(northExit != null) {
-            result += "north, ";
-        }
-        if(eastExit != null) {
-            result += "east, ";
-        }
-        if(southExit != null) {
-            result += "south, ";
-        }
-        if(westExit != null) {
-            result += "west, ";
-        }
-        if(downExit != null) {
-            result += "down, ";
-        }
-        if(upExit != null) {
-            result += "up, ";
-        }
-        //delete comma at end
-        result.substring(0,result.length()-1);
 
-        return result;
+        Set<String> keys = this.exits.keySet();
+
+        for (String v : keys) {
+            result += v + ", ";
+        }
+
+        //delete comma and space at end
+        return result.substring(0,result.length()-2);
+    }
+
+    public String getLongDescription(){
+        return "You are " + this.description + ".\n" + getExitString();
+    }
+
+    public void setObjects(String object){
+        this.objects.add(object);
+    }
+
+    public boolean containsObject(String object){
+
+        for (String v : this.objects) {
+            if (v.equals(object)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }
