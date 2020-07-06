@@ -39,10 +39,16 @@ public class CommandWords
         return false;
     }
 
-    public void showAll(){
+    /**
+     * Return a string of all available commands.
+     * @return A string of all available commands
+     */
+    public String getCommandList(){
+        String result = "";
+
         for (String v : validCommands){
-            System.out.print(v + " ");
+            result += v + " ";
         }
-        System.out.println();
+        return result;
     }
 }

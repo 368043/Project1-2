@@ -20,7 +20,7 @@ public class Room
 {
     private String description;
     private HashMap<String, Room> exits;
-    private ArrayList<String> objects;
+    private ArrayList<Item> items;
 
     /**
      * Create a room described "description". Initially, it has
@@ -32,7 +32,7 @@ public class Room
     {
         this.description = description;
         this.exits = new HashMap<>();
-        this.objects = new ArrayList<>();
+        this.items = new ArrayList<>();
     }
 
     /**
@@ -81,23 +81,51 @@ public class Room
         return result.substring(0,result.length()-2);
     }
 
+    /**
+     * Return an extensive description of the room
+     * @return a description of the room
+     */
     public String getLongDescription(){
-        return "You are " + this.description + ".\n" + getExitString();
+        return "You are " + this.description + ".\n" + getExitString() + "\n" + getItemsString();
     }
 
-    public void setObjects(String object){
-        this.objects.add(object);
+    /**
+     * Add object to room
+     * @param itemName name of items
+     * @param weight weight of items in grams
+     */
+    public void setItems(String itemName, int weight){
+        this.items.add(new Item(itemName, weight));
     }
 
-    public boolean containsObject(String object){
+    /**
+     * Check if room has a certain items.
+     * @param item name of the items
+     * @return True or False
+     */
+    public boolean containsItems(String item){
 
-        for (String v : this.objects) {
-            if (v.equals(object)) {
+        for (Item v : this.items) {
+            if (v.getName().equals(item)) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    /**
+     * Return a string of all items in the room
+     * @return A string of all items in the room
+     */
+    public String getItemsString() {
+        String result = "Items: ";
+
+        for (Item v : items) {
+            result += "\t- " + v.getName() + " (" + v.getWeight() + " grams)\n";
+        }
+
+        return result;
     }
 
 }

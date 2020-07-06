@@ -70,7 +70,7 @@ public class Game
         office1.setExits("south", canteen);
 
         wc.setExits("north", canteen);
-        wc.setObjects("toothbrush");
+        wc.setItems("toothbrush", 50);
 
         office2.setExits("east", canteen);
         office2.setExits("west", outside);
@@ -163,7 +163,7 @@ public class Game
         System.out.println("around at the university.");
         System.out.println();
         System.out.println("Your command words are:");
-        parser.showCommands();
+        System.out.println(parser.showCommands());
     }
 
     /** 
@@ -208,10 +208,16 @@ public class Game
         }
     }
 
+    /**
+     * "Look" was entered. print out details of room.
+     */
     private void look(){
         System.out.println(currentRoom.getLongDescription());
     }
 
+    /**
+     * "Find" was entered. Find an item in current room.
+     */
     private void find(Command command){
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know what to find...
@@ -221,7 +227,7 @@ public class Game
 
         String object = command.getSecondWord();
 
-        if (currentRoom.containsObject(object)) {
+        if (currentRoom.containsItems(object)) {
             System.out.println("You found " + object + "!");
         }
         else {
@@ -229,6 +235,10 @@ public class Game
         }
     }
 
+    /**
+     * "Grab" was entered. if current room contains item, grab the item.
+     * @param command
+     */
     private void grab(Command command){
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know what to grab...
@@ -238,7 +248,7 @@ public class Game
 
         String object = command.getSecondWord();
 
-        if (currentRoom.containsObject(object)) {
+        if (currentRoom.containsItems(object)) {
             this.backpack.add(object);
         }
     }
