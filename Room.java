@@ -90,12 +90,11 @@ public class Room
     }
 
     /**
-     * Add object to room
-     * @param itemName name of items
-     * @param weight weight of items in grams
+     * Add item to room
+     * @param item item object
      */
-    public void setItems(String itemName, int weight){
-        this.items.add(new Item(itemName, weight));
+    public void setItems(Item item){
+        this.items.add(item);
     }
 
     /**
@@ -106,7 +105,7 @@ public class Room
         String result = "Items: ";
 
         for (Item v : items) {
-            result += "\t- " + v.getName() + " (" + v.getWeight() + " grams)\n";
+            result += "\t- " + v.getName() + " (" + v.getWeight() + " grams)\n\t";
         }
 
         return result;

@@ -1,4 +1,4 @@
-import java.util.Stack;
+
 /**
  *  This class is the main class of the "World of Zuul" application. 
  *  "World of Zuul" is a very simple, text based adventure game.  Users 
@@ -19,28 +19,30 @@ import java.util.Stack;
 public class Game 
 {
     private Parser parser;
-    private Room currentRoom;
-    private Backpack backpack;
-    private Stack<Room> roomHistory;
+    private Player player;
         
     /**
      * Create the game and initialise its internal map.
      */
     public Game() 
     {
-        createRooms();
+        createGame();
         parser = new Parser();
-        backpack = new Backpack();
-        roomHistory = new Stack<>();
     }
 
     /**
      * Create all the rooms and link their exits together.
      */
-    private void createRooms()
+    private void createGame()
     {
-        Room store, canteen, office1, office2, stockroom, outside, lowStairwell, highStairwell, wc;
-      
+        Room store, canteen, office1, office2, stockroom, lowStairwell, highStairwell, wc;
+        LockedRoom outside;
+        Item toothbrush, goldbar;
+
+        //create items
+        toothbrush = new Item("toothbrush", 50);
+        goldbar = new Item("goldbar", 2500);
+
         // create the rooms
         store = new Room("the storeroom");
         canteen = new Room("in the company canteen");
@@ -48,16 +50,17 @@ public class Game
         office2 = new Room("in an office");
         wc = new Room("wc");
         stockroom = new Room("in the stockroom");
-        outside = new Room("outside the store");
+        outside = new LockedRoom("outside the store", toothbrush.getName());
         lowStairwell =  new Room("lower Stairwell");
         highStairwell =  new Room("upper Stairwell");
 
-        // initialise room exits
+        // initialise room exits and items
         store.setExits("north", outside);
         store.setExits("south", stockroom);
 
         stockroom.setExits("north", store);
         stockroom.setExits("east", lowStairwell);
+        stockroom.setItems(goldbar);
 
         lowStairwell.setExits("west", stockroom);
         lowStairwell.setExits("up", highStairwell);
@@ -73,12 +76,16 @@ public class Game
         office1.setExits("south", canteen);
 
         wc.setExits("north", canteen);
-        wc.setItems("toothbrush", 50);
+        wc.setItems(toothbrush);
 
         office2.setExits("east", canteen);
         office2.setExits("west", outside);
 
-        currentRoom = store;  // start game in store
+        createPlayer(store);  // player starts in store
+    }
+
+    private void createPlayer(Room startRoom) {
+        this.player = new Player(startRoom);
     }
 
     /**
@@ -102,8 +109,7 @@ public class Game
     /**
      * Print out the opening message for the player.
      */
-    private void printWelcome()
-    {
+    private void printWelcome() {
         System.out.println();
         System.out.println("Welcome to the World of Zuul!");
         System.out.println("World of Zuul is a new, incredibly boring adventure game.");
@@ -113,7 +119,7 @@ public class Game
     }
 
     private void printLocationInfo(){
-        System.out.println(currentRoom.getLongDescription());
+        System.out.println(player.getCurrentRoom().getLongDescription());
     }
 
     /**
@@ -135,7 +141,7 @@ public class Game
             printHelp();
         }
         else if (commandWord.equals("go")) {
-            goRoom(command);
+            go(command);
         }
         else if (commandWord.equals("quit")) {
             wantToQuit = quit(command);
@@ -148,6 +154,12 @@ public class Game
         }
         else if (commandWord.equals("back")) {
             back();
+        }
+        else if (commandWord.equals("drop")) {
+            drop(command);
+        }
+        else if (commandWord.equals("use")) {
+            use(command);
         }
 
         return wantToQuit;
@@ -173,7 +185,7 @@ public class Game
      * Try to go in one direction. If there is an exit, enter
      * the new room, otherwise print an error message.
      */
-    private void goRoom(Command command) 
+    private void go(Command command)
     {
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know where to go...
@@ -184,15 +196,11 @@ public class Game
         String direction = command.getSecondWord();
 
         // Try to leave current room.
-        Room nextRoom = currentRoom.getExit(direction);
-
-        if (nextRoom == null) {
-            System.out.println("There is no door!");
+        if (this.player.goRoom(direction)) {
+            printLocationInfo();
         }
         else {
-            this.roomHistory.push(currentRoom);
-            currentRoom = nextRoom;
-            printLocationInfo();
+            System.out.println("There is no door or room is locked. Try to use items to open the door!");
         }
     }
 
@@ -221,7 +229,7 @@ public class Game
             return;
         }
         else if (command.getSecondWord().equals("backpack")) {
-            System.out.println(backpack.getItemsString());
+            System.out.println(player.getItemsString());
         }
         else if (command.getSecondWord().equals("around")) {
             printLocationInfo();
@@ -240,22 +248,54 @@ public class Game
             return;
         }
         String itemName = command.getSecondWord();
-        Item item = currentRoom.getItem(itemName);
 
-        if (item != null) {
-            this.backpack.addItem(item);
-            currentRoom.removeItem(itemName);
-        }
+
+        this.player.grabItem(itemName);
     }
 
     private void back(){
-        if (roomHistory.empty()) {
-            System.out.println("You can't go back.");
-        }
-        else {
-            currentRoom = roomHistory.pop();
+        if (this.player.previousRoom()) {
             printLocationInfo();
         }
+        else {
+            System.out.println("You can't go back.");
+        }
+    }
+
+    private void drop(Command command) {
+        if(!command.hasSecondWord()) {
+            // if there is no second word, we don't know what to drop...
+            System.out.println("Drop what?");
+            return;
+        }
+
+        String itemName = command.getSecondWord();
+
+        if (this.player.dropItem(itemName)) {
+            System.out.println("Dropped " + itemName);
+        }
+        else {
+            System.out.println("Can't drop " + itemName);
+        }
+    }
+
+    private void use(Command command) {
+        if(!command.hasThirdWord()) {
+            // if there is no second word, we don't know what to use and where...
+            System.out.println("Use what and where?");
+            return;
+        }
+
+        String itemName = command.getSecondWord();
+        String direction = command.getThirdWord();
+
+        if (this.player.openRoom(itemName, direction)) {
+            System.out.println("It worked!");
+        }
+        else {
+            System.out.println("So, it didn't work...");
+        }
+
     }
 
     public static void main(String[] args) {
