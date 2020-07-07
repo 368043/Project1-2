@@ -99,22 +99,6 @@ public class Room
     }
 
     /**
-     * Check if room has a certain items.
-     * @param item name of the items
-     * @return True or False
-     */
-    public boolean containsItems(String item){
-
-        for (Item v : this.items) {
-            if (v.getName().equals(item)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Return a string of all items in the room
      * @return A string of all items in the room
      */
@@ -126,6 +110,24 @@ public class Room
         }
 
         return result;
+    }
+
+    public Item getItem(String itemName) {
+        for (Item v : this.items) {
+            if (v.getName().equals(itemName)) {
+                return v;
+            }
+        }
+        return null;
+    }
+
+    public boolean removeItem(String itemName) {
+        for (Item v : this.items) {
+            if (v.getName().equals(itemName)) {
+                return items.remove(v);
+            }
+        }
+        return false;
     }
 
 }

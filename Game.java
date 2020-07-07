@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.Stack;
 /**
  *  This class is the main class of the "World of Zuul" application. 
  *  "World of Zuul" is a very simple, text based adventure game.  Users 
@@ -20,7 +20,8 @@ public class Game
 {
     private Parser parser;
     private Room currentRoom;
-    private ArrayList<String> backpack;
+    private Backpack backpack;
+    private Stack<Room> roomHistory;
         
     /**
      * Create the game and initialise its internal map.
@@ -29,6 +30,8 @@ public class Game
     {
         createRooms();
         parser = new Parser();
+        backpack = new Backpack();
+        roomHistory = new Stack<>();
     }
 
     /**
@@ -138,13 +141,13 @@ public class Game
             wantToQuit = quit(command);
         }
         else if (commandWord.equals("look")) {
-            look();
-        }
-        else if (commandWord.equals("find")) {
-            find(command);
+            look(command);
         }
         else if (commandWord.equals("grab")) {
             grab(command);
+        }
+        else if (commandWord.equals("back")) {
+            back();
         }
 
         return wantToQuit;
@@ -187,6 +190,7 @@ public class Game
             System.out.println("There is no door!");
         }
         else {
+            this.roomHistory.push(currentRoom);
             currentRoom = nextRoom;
             printLocationInfo();
         }
@@ -211,28 +215,18 @@ public class Game
     /**
      * "Look" was entered. print out details of room.
      */
-    private void look(){
-        System.out.println(currentRoom.getLongDescription());
-    }
-
-    /**
-     * "Find" was entered. Find an item in current room.
-     */
-    private void find(Command command){
+    private void look(Command command){
         if(!command.hasSecondWord()) {
-            // if there is no second word, we don't know what to find...
-            System.out.println("Find what?");
+            System.out.println("Look where?");
             return;
         }
-
-        String object = command.getSecondWord();
-
-        if (currentRoom.containsItems(object)) {
-            System.out.println("You found " + object + "!");
+        else if (command.getSecondWord().equals("backpack")) {
+            System.out.println(backpack.getItemsString());
         }
-        else {
-            System.out.println("This room doesn't contain " + object + ".");
+        else if (command.getSecondWord().equals("around")) {
+            printLocationInfo();
         }
+
     }
 
     /**
@@ -245,13 +239,28 @@ public class Game
             System.out.println("Grab what?");
             return;
         }
+        String itemName = command.getSecondWord();
+        Item item = currentRoom.getItem(itemName);
 
-        String object = command.getSecondWord();
-
-        if (currentRoom.containsItems(object)) {
-            this.backpack.add(object);
+        if (item != null) {
+            this.backpack.addItem(item);
+            currentRoom.removeItem(itemName);
         }
     }
 
+    private void back(){
+        if (roomHistory.empty()) {
+            System.out.println("You can't go back.");
+        }
+        else {
+            currentRoom = roomHistory.pop();
+            printLocationInfo();
+        }
+    }
+
+    public static void main(String[] args) {
+        Game game = new Game();
+        game.play();
+    }
 
 }
