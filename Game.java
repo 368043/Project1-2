@@ -113,7 +113,7 @@ public class Game
         System.out.println();
         System.out.println("Welcome to the World of Zuul!");
         System.out.println("World of Zuul is a new, incredibly boring adventure game.");
-        System.out.println("Type 'help' if you need help.");
+        System.out.println("Type '" + CommandWord.HELP.toString() + "' if you need help.");
         System.out.println();
         printLocationInfo();
     }
@@ -131,35 +131,35 @@ public class Game
     {
         boolean wantToQuit = false;
 
-        if(command.isUnknown()) {
-            System.out.println("I don't know what you mean...");
-            return false;
-        }
+        CommandWord commandWord = command.getCommandWord();
 
-        String commandWord = command.getCommandWord();
-        if (commandWord.equals("help")) {
+        if (commandWord == CommandWord.HELP) {
             printHelp();
         }
-        else if (commandWord.equals("go")) {
+        else if (commandWord == CommandWord.GO) {
             go(command);
         }
-        else if (commandWord.equals("quit")) {
+        else if (commandWord == CommandWord.QUIT) {
             wantToQuit = quit(command);
         }
-        else if (commandWord.equals("look")) {
+        else if (commandWord == CommandWord.LOOK) {
             look(command);
         }
-        else if (commandWord.equals("grab")) {
+        else if (commandWord == CommandWord.GRAB) {
             grab(command);
         }
-        else if (commandWord.equals("back")) {
+        else if (commandWord == CommandWord.BACK) {
             back();
         }
-        else if (commandWord.equals("drop")) {
+        else if (commandWord == CommandWord.DROP) {
             drop(command);
         }
-        else if (commandWord.equals("use")) {
+        else if (commandWord == CommandWord.USE) {
             use(command);
+        }
+        else if (commandWord == CommandWord.UNKNOWN) {
+            System.out.println("I don't know what you mean...");
+            return false;
         }
 
         return wantToQuit;

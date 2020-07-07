@@ -9,12 +9,11 @@
  * @version 2016.02.29
  */
 
+import java.util.HashMap;
+
 public class CommandWords
 {
-    // a constant array that holds all valid command words
-    private static final String[] validCommands = {
-        "go", "quit", "help", "look", "grab", "back", "drop", "use"
-    };
+    private HashMap<String, CommandWord> validCommands;
 
     /**
      * Constructor - initialise the command words.
@@ -22,6 +21,14 @@ public class CommandWords
     public CommandWords()
     {
         // nothing to do at the moment...
+        this.validCommands = new HashMap<>();
+
+        for (CommandWord command : CommandWord.values()) {
+            if (command != CommandWord.UNKNOWN) {
+                validCommands.put(command.toString(), command);
+            }
+        }
+
     }
 
     /**
@@ -29,14 +36,25 @@ public class CommandWords
      * @return true if a given string is a valid command,
      * false if it isn't.
      */
-    public boolean isCommand(String aString)
+    public CommandWord getCommandWord(String commandWord)
     {
-        for(int i = 0; i < validCommands.length; i++) {
-            if(validCommands[i].equals(aString))
-                return true;
+        CommandWord command = validCommands.get(commandWord);
+        if (command != null) {
+            return command;
         }
-        // if we get here, the string was not found in the commands
-        return false;
+        else {
+            return CommandWord.UNKNOWN;
+        }
+    }
+
+    /**
+     * Check whether a given String is a valid command word.
+     * @return true if a given string is a valid command,
+     * false if it isn't.
+     */
+    public boolean isCommand(String commandWord)
+    {
+       return validCommands.containsKey(commandWord);
     }
 
     /**
@@ -46,9 +64,10 @@ public class CommandWords
     public String getCommandList(){
         String result = "";
 
-        for (String v : validCommands){
+        for (String v : validCommands.keySet()){
             result += v + " ";
         }
         return result;
     }
+
 }
