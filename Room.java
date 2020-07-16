@@ -111,6 +111,11 @@ public class Room
         return result;
     }
 
+    /**
+     * Return an item object by passing in the name of the item
+     * @param itemName String of the name of the item
+     * @return an item object
+     */
     public Item getItem(String itemName) {
         for (Item v : this.items) {
             if (v.getName().equals(itemName)) {
@@ -120,6 +125,11 @@ public class Room
         return null;
     }
 
+    /**
+     * Remove the item object out of the room by passing in the item name
+     * @param itemName String of the name of the item
+     * @return true or false
+     */
     public boolean removeItem(String itemName) {
         for (Item v : this.items) {
             if (v.getName().equals(itemName)) {

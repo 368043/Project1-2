@@ -15,6 +15,11 @@ public class LockedRoom extends Room {
         this.key = key;
     }
 
+    /**
+     * Open the room by passing in the key
+     * @param key the string of the key
+     * @return true or false
+     */
     public boolean openRoom(String key) {
         if (this.key.equals(key)) {
             this.locked = false;
@@ -25,6 +30,10 @@ public class LockedRoom extends Room {
         }
     }
 
+    /**
+     * Check if room is locked
+     * @return true or false
+     */
     public boolean isLocked() {
         return this.locked;
     }

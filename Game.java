@@ -20,11 +20,11 @@ public class Game
 {
     private Parser parser;
     private Player player;
-        
+
     /**
      * Create the game and initialise its internal map.
      */
-    public Game() 
+    public Game()
     {
         createGame();
         parser = new Parser();
@@ -84,6 +84,10 @@ public class Game
         createPlayer(store);  // player starts in store
     }
 
+    /**
+     * Creates the player Object with a startRoom
+     * @param startRoom The room where the player will start
+     */
     private void createPlayer(Room startRoom) {
         this.player = new Player(startRoom);
     }
@@ -91,19 +95,25 @@ public class Game
     /**
      *  Main play routine.  Loops until end of play.
      */
-    public void play() 
-    {            
+    public void play() {
         printWelcome();
 
         // Enter the main command loop.  Here we repeatedly read commands and
         // execute them until the game is over.
-                
+
         boolean finished = false;
-        while (! finished) {
+
+        while (!finished) {
+
             Command command = parser.getCommand();
             finished = processCommand(command);
+
         }
+
         System.out.println("Thank you for playing.  Good bye.");
+
+
+
     }
 
     /**
@@ -113,6 +123,7 @@ public class Game
         System.out.println();
         System.out.println("Welcome to the World of Zuul!");
         System.out.println("World of Zuul is a new, incredibly boring adventure game.");
+        System.out.println("In this game you need to escape the store within 10 minutes, otherwise the police will catch you.");
         System.out.println("Type '" + CommandWord.HELP.toString() + "' if you need help.");
         System.out.println();
         printLocationInfo();
@@ -253,6 +264,9 @@ public class Game
         this.player.grabItem(itemName);
     }
 
+    /**
+     * Go to previous visited room
+     */
     private void back(){
         if (this.player.previousRoom()) {
             printLocationInfo();
@@ -262,6 +276,10 @@ public class Game
         }
     }
 
+    /**
+     * Drop an item of your backpack
+     * @param command
+     */
     private void drop(Command command) {
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know what to drop...
@@ -279,6 +297,10 @@ public class Game
         }
     }
 
+    /**
+     * Use an item of your backpack to accomplish something
+     * @param command
+     */
     private void use(Command command) {
         if(!command.hasThirdWord()) {
             // if there is no second word, we don't know what to use and where...
@@ -297,6 +319,7 @@ public class Game
         }
 
     }
+
 
     public static void main(String[] args) {
         Game game = new Game();

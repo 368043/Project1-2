@@ -4,10 +4,18 @@ public enum CommandWord {
 
     private String commandWord;
 
+    /**
+     * Construct a command word
+     * @param commandWord
+     */
     CommandWord(String commandWord) {
         this.commandWord = commandWord;
     }
 
+    /**
+     * Returns a string of the command
+     * @return a String
+     */
     public String toString(){
         return commandWord;
     }
