@@ -41,13 +41,13 @@ public class Backpack {
      * @return a string
      */
     public String getItemsString() {
-        String result = "Backpack contains:";
+        String result = "Backpack contains:\n";
 
         for (Item v : this.items) {
-            result += "\t- " + v.getName() + " (" + v.getWeight() + " grams)\n\t";
+            result += "\t- " + v.getName() + " (" + v.getWeight() + " grams)\n";
         }
 
-        result += "Total weight of backpack is: " + getTotalWeight() +"/" + (MAX_WEIGHT - getTotalWeight()) + " grams\n";
+        result += "\nTotal weight of backpack is: " + getTotalWeight() + "/" + MAX_WEIGHT + " grams\n";
         return result;
 
     }

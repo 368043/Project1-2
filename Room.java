@@ -86,7 +86,7 @@ public class Room
      * @return a description of the room
      */
     public String getLongDescription(){
-        return "You are " + this.description + ".\n" + getExitString() + "\n" + getItemsString();
+        return "You are now " + this.description + ".\n" + getExitString() + "\n" + getItemsString();
     }
 
     /**

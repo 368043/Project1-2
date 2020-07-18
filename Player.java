@@ -42,6 +42,7 @@ public class Player {
 
         if (newRoom instanceof LockedRoom) {
             if (((LockedRoom) newRoom).isLocked()) {
+                System.out.println("Room is locked. Try to use items to open the door!");
                 return false;
             }
             else {

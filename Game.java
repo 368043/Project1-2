@@ -37,22 +37,24 @@ public class Game
     {
         Room store, canteen, office1, office2, stockroom, lowStairwell, highStairwell, wc;
         LockedRoom outside;
-        Item toothbrush, goldbar;
+        Item toothbrush, goldbar, cash, knife;
 
         //create items
         toothbrush = new Item("toothbrush", 50);
-        goldbar = new Item("goldbar", 2500);
+        goldbar = new Item("goldbar", 800);
+        cash = new Item("cash", 600);
+        knife = new Item("knife", 200);
 
         // create the rooms
-        store = new Room("the storeroom");
+        store = new Room("in the storeroom");
         canteen = new Room("in the company canteen");
         office1 = new Room("in an office");
         office2 = new Room("in an office");
         wc = new Room("wc");
         stockroom = new Room("in the stockroom");
         outside = new LockedRoom("outside the store", toothbrush.getName());
-        lowStairwell =  new Room("lower Stairwell");
-        highStairwell =  new Room("upper Stairwell");
+        lowStairwell =  new Room("in the lower Stairwell");
+        highStairwell =  new Room("in the upper Stairwell");
 
         // initialise room exits and items
         store.setExits("north", outside);
@@ -67,6 +69,7 @@ public class Game
 
         highStairwell.setExits("west", canteen);
         highStairwell.setExits("down", lowStairwell);
+        highStairwell.setItems(knife);
 
         canteen.setExits("north", office1);
         canteen.setExits("east", highStairwell);
@@ -74,6 +77,7 @@ public class Game
         canteen.setExits("west", office2);
 
         office1.setExits("south", canteen);
+        office1.setItems(cash);
 
         wc.setExits("north", canteen);
         wc.setItems(toothbrush);
@@ -123,7 +127,7 @@ public class Game
         System.out.println();
         System.out.println("Welcome to the World of Zuul!");
         System.out.println("World of Zuul is a new, incredibly boring adventure game.");
-        System.out.println("In this game you need to escape the store within 10 minutes, otherwise the police will catch you.");
+        System.out.println("In this game you need to escape the store, otherwise the police will catch you.");
         System.out.println("Type '" + CommandWord.HELP.toString() + "' if you need help.");
         System.out.println();
         printLocationInfo();
@@ -185,10 +189,8 @@ public class Game
      */
     private void printHelp() 
     {
-        System.out.println("You are lost. You are alone. You wander");
-        System.out.println("around at the university.");
-        System.out.println();
-        System.out.println("Your command words are:");
+        System.out.println("Try to get out of the store as soon as possible.");
+        System.out.println("Available command words are:");
         System.out.println(parser.showCommands());
     }
 
@@ -211,7 +213,7 @@ public class Game
             printLocationInfo();
         }
         else {
-            System.out.println("There is no door or room is locked. Try to use items to open the door!");
+            System.out.println("Is not possible.");
         }
     }
 
@@ -319,6 +321,8 @@ public class Game
         }
 
     }
+
+
 
 
     public static void main(String[] args) {
