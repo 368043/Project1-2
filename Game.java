@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 /**
  *  This class is the main class of the "World of Zuul" application. 
@@ -38,12 +39,21 @@ public class Game
         Room store, canteen, office1, office2, stockroom, lowStairwell, highStairwell, wc;
         LockedRoom outside;
         Item toothbrush, goldbar, cash, knife;
+        Workbench workbench1;
 
         //create items
         toothbrush = new Item("toothbrush", 50);
         goldbar = new Item("goldbar", 800);
         cash = new Item("cash", 600);
         knife = new Item("knife", 200);
+
+        //create components
+        ArrayList<String> cashComponents = new ArrayList<>();
+        cashComponents.add("toothbrush");
+        cashComponents.add("knife");
+
+        //create workbenches
+        workbench1 = new Workbench(cashComponents, cash);
 
         // create the rooms
         store = new Room("in the storeroom");
@@ -75,9 +85,9 @@ public class Game
         canteen.setExits("east", highStairwell);
         canteen.setExits("south", wc);
         canteen.setExits("west", office2);
+        canteen.setWorkbench(workbench1);
 
         office1.setExits("south", canteen);
-        office1.setItems(cash);
 
         wc.setExits("north", canteen);
         wc.setItems(toothbrush);
@@ -172,6 +182,9 @@ public class Game
         else if (commandWord == CommandWord.USE) {
             use(command);
         }
+        else if (commandWord == CommandWord.BUILD) {
+            build(command);
+        }
         else if (commandWord == CommandWord.UNKNOWN) {
             System.out.println("I don't know what you mean...");
             return false;
@@ -246,6 +259,9 @@ public class Game
         }
         else if (command.getSecondWord().equals("around")) {
             printLocationInfo();
+        }
+        else if (command.getSecondWord().equals("workbench")) {
+            player.lookWorkbench();
         }
 
     }
@@ -322,12 +338,15 @@ public class Game
 
     }
 
+    private void build(Command command){
+        if (!command.hasSecondWord()){
+            System.out.println("Build what?");
+            return;
+        }
 
+        String itemName = command.getSecondWord();
 
-
-    public static void main(String[] args) {
-        Game game = new Game();
-        game.play();
+        this.player.buildItem(itemName);
     }
 
 }

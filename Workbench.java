@@ -2,28 +2,39 @@ import java.util.ArrayList;
 
 public class Workbench {
     private Item item;
-    private String[] components;
+    private ArrayList<String> components;
 
-    public Workbench(String[] components, Item item){
+    public Workbench(ArrayList components, Item item){
         this.item = item;
         this.components = components;
     }
 
-    public void printDescription(){
-        System.out.println("Here you can build " + this.item.getName() + " with the following items:\n");
+    public String stringDescription(){
+        String result = "Here you can build " + this.item.getName() + " with the following items:\n";
+
         for (String v : this.components){
-            System.out.println("\t- v\n");
+            result += "\t- "+v+"\n";
         }
+
+        return result;
     }
 
-    public Item buildItem(String[] items){
-        int amount = this.components.length;
+    public String getItemString(){
+        return this.item.getName();
+    }
+
+    public ArrayList<String> returnComponents(){
+        return this.components;
+    }
+
+    public Item buildItem(ArrayList<Item> items){
+        int amount = this.components.size();
 
         int check = 0;
 
-        for (String v: items){
+        for (Item v: items){
             for (String v2: this.components){
-                if (v.equals(v2)){
+                if (v.getName().equals(v2)){
                     check++;
                 }
             }

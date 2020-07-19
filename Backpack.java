@@ -79,4 +79,8 @@ public class Backpack {
         return null;
     }
 
+    public ArrayList<Item> getItems(){
+        return this.items;
+    }
+
 }

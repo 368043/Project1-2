@@ -158,4 +158,30 @@ public class Player {
         }
     }
 
+    public void lookWorkbench(){
+        System.out.println(this.currentRoom.getWorkbenchString());
+    }
+
+    public void buildItem(String item){
+        if (this.currentRoom.workbenchCheck()){
+            if (this.currentRoom.getItemName().equals(item)){
+                Item result = this.currentRoom.buildItem(this.backpack.getItems());
+                if (result == null){
+                    System.out.println("You don't have all the components\n");
+                }else {
+                    for (String v: this.currentRoom.getComponents()){
+                        this.backpack.removeItem(this.backpack.getItemByString(v));
+                    }
+                    this.backpack.addItem(result);
+                    System.out.println("Successfully build " + result.getName() + ".\nLook in your backpack.");
+                }
+            }else {
+                System.out.println("Can't build " + item + " at this workbench" );
+            }
+        }else {
+            System.out.println("No workbench here");
+        }
+
+    }
+
 }

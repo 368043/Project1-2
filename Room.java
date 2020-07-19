@@ -21,6 +21,7 @@ public class Room
     private String description;
     private HashMap<String, Room> exits;
     private ArrayList<Item> items;
+    private Workbench workbench;
 
     /**
      * Create a room described "description". Initially, it has
@@ -44,6 +45,11 @@ public class Room
     public void setExits(String direction, Room neighbor)
     {
         this.exits.put(direction, neighbor);
+    }
+
+    public void setWorkbench(Workbench workbench){
+        this.workbench = workbench;
+
     }
 
     /**
@@ -86,7 +92,7 @@ public class Room
      * @return a description of the room
      */
     public String getLongDescription(){
-        return "You are now " + this.description + ".\n" + getExitString() + "\n" + getItemsString();
+        return "You are now " + this.description + ".\n" + getExitString() + "\n" + getItemsString() + "\nWorkbench: " + workbenchCheck();
     }
 
     /**
@@ -137,6 +143,35 @@ public class Room
             }
         }
         return false;
+    }
+
+    public boolean workbenchCheck(){
+        if (this.workbench == null){
+            return false;
+        }else {
+            return true;
+        }
+    }
+
+    public String getWorkbenchString(){
+        if (this.workbench == null){
+            return "This room doesn't contain a workbench";
+        }else {
+            return this.workbench.stringDescription();
+        }
+
+    }
+
+    public String getItemName(){
+        return this.workbench.getItemString();
+    }
+
+    public ArrayList<String> getComponents(){
+        return this.workbench.returnComponents();
+    }
+
+    public Item buildItem(ArrayList<Item> items){
+        return this.workbench.buildItem(items);
     }
 
 }
