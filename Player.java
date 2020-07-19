@@ -144,7 +144,6 @@ public class Player {
         else {
             if (target instanceof LockedRoom) {
                 if (((LockedRoom) target).openRoom(item)) {
-                    this.backpack.removeItem(tempItem);
                     return true;
                 }
                 else {

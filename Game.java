@@ -38,22 +38,37 @@ public class Game
     {
         Room store, canteen, office1, office2, stockroom, lowStairwell, highStairwell, wc;
         LockedRoom outside;
-        Item toothbrush, goldbar, cash, knife;
-        Workbench workbench1;
+        Item toothbrush, goldBar, cash, knife, noteBook, pencil, safe, plate, spoon, cup, lockPicker, key;
+        Workbench workbench1, workbench2;
 
         //create items
         toothbrush = new Item("toothbrush", 50);
-        goldbar = new Item("goldbar", 800);
-        cash = new Item("cash", 600);
+        goldBar = new Item("goldbar", 700);
+        cash = new Item("cash", 200);
         knife = new Item("knife", 200);
+        noteBook = new Item("notebook", 100);
+        pencil = new Item("pencil", 20);
+        safe = new Item("safe", 500);
+        plate = new Item("plate", 150);
+        spoon = new Item("spoon", 80);
+        cup = new Item("cup", 60);
+        lockPicker = new Item("lockpicker", 80);
+        key = new Item("key", 50);
+
+
 
         //create components
         ArrayList<String> cashComponents = new ArrayList<>();
-        cashComponents.add("toothbrush");
-        cashComponents.add("knife");
+        cashComponents.add("safe");
+        cashComponents.add("key");
+
+        ArrayList<String> lockPickComponents = new ArrayList<>();
+        lockPickComponents.add("toothbrush");
+        lockPickComponents.add("knife");
 
         //create workbenches
         workbench1 = new Workbench(cashComponents, cash);
+        workbench2 = new Workbench(lockPickComponents, lockPicker);
 
         // create the rooms
         store = new Room("in the storeroom");
@@ -62,17 +77,20 @@ public class Game
         office2 = new Room("in an office");
         wc = new Room("wc");
         stockroom = new Room("in the stockroom");
-        outside = new LockedRoom("outside the store", toothbrush.getName());
+        outside = new LockedRoom("outside the store", lockPicker.getName());
         lowStairwell =  new Room("in the lower Stairwell");
         highStairwell =  new Room("in the upper Stairwell");
 
         // initialise room exits and items
         store.setExits("north", outside);
         store.setExits("south", stockroom);
+        store.setItems(noteBook);
+        store.setItems(pencil);
+        store.setItems(safe);
 
         stockroom.setExits("north", store);
         stockroom.setExits("east", lowStairwell);
-        stockroom.setItems(goldbar);
+        stockroom.setItems(goldBar);
 
         lowStairwell.setExits("west", stockroom);
         lowStairwell.setExits("up", highStairwell);
@@ -85,15 +103,20 @@ public class Game
         canteen.setExits("east", highStairwell);
         canteen.setExits("south", wc);
         canteen.setExits("west", office2);
-        canteen.setWorkbench(workbench1);
+        canteen.setItems(plate);
+        canteen.setItems(spoon);
+        canteen.setItems(cup);
+        canteen.setWorkbench(workbench2);
 
         office1.setExits("south", canteen);
+        office1.setItems(key);
 
         wc.setExits("north", canteen);
         wc.setItems(toothbrush);
 
         office2.setExits("east", canteen);
         office2.setExits("west", outside);
+        office2.setWorkbench(workbench1);
 
         createPlayer(store);  // player starts in store
     }
