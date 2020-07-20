@@ -18,12 +18,12 @@ public class Backpack {
      */
     public boolean addItem(Item item) {
         if (item.getWeight() + getTotalWeight() > MAX_WEIGHT) {
-            System.out.println("Backpack is too heavy. Reduce weight by dropping items.");
+            System.out.println("\nBackpack is too heavy. Reduce weight by dropping items.\n");
             return false;
         }
         else {
             this.items.add(item);
-            System.out.println("Grabbed " + item.getName());
+            System.out.println("\nGrabbed " + item.getName() + "\n");
             return true;
         }
     }
@@ -47,7 +47,7 @@ public class Backpack {
             result += "\t- " + v.getName() + " (" + v.getWeight() + " grams)\n";
         }
 
-        result += "\nTotal weight of backpack is: " + getTotalWeight() + "/" + MAX_WEIGHT + " grams\n";
+        result += "\nTotal weight of backpack is: " + getTotalWeight() + "/" + MAX_WEIGHT + " grams";
         return result;
 
     }

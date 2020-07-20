@@ -147,15 +147,22 @@ public class Game
             finished = processCommand(command);
 
         }
+        System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++");
         if (checkWin()){
-            System.out.println("\nYou did it! You escaped the store before the police came.\nWell done and enjoy your loot.");
+            System.out.println("You did it!\nYou escaped the store before the police came.\nWell done and enjoy your loot.");
         }
-        System.out.println("Thank you for playing.  Good bye.");
+
+        System.out.println("Thank you for playing. Good bye!");
+        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++\n");
 
 
 
     }
 
+    /**
+     * Checks if game has been won
+     * @return true or false
+     */
     public boolean checkWin(){
         if (this.player.getCurrentRoom() == this.winScenario){
             return true;
@@ -168,17 +175,19 @@ public class Game
      * Print out the opening message for the player.
      */
     private void printWelcome() {
-        System.out.println();
-        System.out.println("Welcome to the World of Zuul!");
-        System.out.println("World of Zuul is a new, incredibly boring adventure game.");
-        System.out.println("In this game you need to escape the store, otherwise the police will catch you.");
+        System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++");
+        System.out.println("Welcome to the Robber Game");
+        System.out.println("In this game you need to escape the store ASAP,\notherwise the police will catch you.");
         System.out.println("Type '" + CommandWord.HELP.toString() + "' if you need help.");
-        System.out.println();
+        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++\n");
+
         printLocationInfo();
     }
 
     private void printLocationInfo(){
+        System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++");
         System.out.println(player.getCurrentRoom().getLongDescription());
+        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++\n");
     }
 
     /**
@@ -202,7 +211,7 @@ public class Game
             case LOOK -> look(command);
             case QUIT -> wantToQuit = quit(command);
             case BUILD -> build(command);
-            case UNKNOWN -> System.out.println("I don't know what you mean...");
+            case UNKNOWN -> System.out.println("\nI don't know what you mean...\n");
         }
 
         return wantToQuit;
@@ -217,9 +226,11 @@ public class Game
      */
     private void printHelp() 
     {
+        System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++");
         System.out.println("Try to get out of the store as soon as possible.");
         System.out.println("Available command words are:");
         System.out.println(parser.showCommands());
+        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++\n");
     }
 
     /** 
@@ -230,7 +241,7 @@ public class Game
     {
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know where to go...
-            System.out.println("Go where?");
+            System.out.println("\nGo where?\n");
             return;
         }
 
@@ -241,7 +252,7 @@ public class Game
             printLocationInfo();
         }
         else {
-            System.out.println("Is not possible.");
+            System.out.println("\nIs not possible.\n");
         }
     }
 
@@ -253,7 +264,7 @@ public class Game
     private boolean quit(Command command) 
     {
         if(command.hasSecondWord()) {
-            System.out.println("Quit what?");
+            System.out.println("\nQuit what?\n");
             return false;
         }
         else {
@@ -266,19 +277,23 @@ public class Game
      */
     private void look(Command command){
         if(!command.hasSecondWord()) {
-            System.out.println("Look where?");
+            System.out.println("\nLook where?\n");
             return;
         }
 
         switch (command.getSecondWord()){
             case "backpack":
+                System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++");
                 System.out.println(player.getItemsString());
+                System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++\n");
                 break;
             case "around":
                 printLocationInfo();
                 break;
             case "workbench":
+                System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++");
                 player.lookWorkbench();
+                System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++\n");
                 break;
         }
     }
@@ -290,7 +305,7 @@ public class Game
     private void grab(Command command){
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know what to grab...
-            System.out.println("Grab what?");
+            System.out.println("\nGrab what?\n");
             return;
         }
         String itemName = command.getSecondWord();
@@ -307,7 +322,7 @@ public class Game
             printLocationInfo();
         }
         else {
-            System.out.println("You can't go back.");
+            System.out.println("\nYou can't go back.\n");
         }
     }
 
@@ -318,17 +333,17 @@ public class Game
     private void drop(Command command) {
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know what to drop...
-            System.out.println("Drop what?");
+            System.out.println("\nDrop what?\n");
             return;
         }
 
         String itemName = command.getSecondWord();
 
         if (this.player.dropItem(itemName)) {
-            System.out.println("Dropped " + itemName);
+            System.out.println("\nDropped " + itemName + "\n");
         }
         else {
-            System.out.println("Can't drop " + itemName);
+            System.out.println("\nCan't drop " + itemName + "\n");
         }
     }
 
@@ -339,7 +354,7 @@ public class Game
     private void use(Command command) {
         if(!command.hasThirdWord()) {
             // if there is no second word, we don't know what to use and where...
-            System.out.println("Use what and where?");
+            System.out.println("\nUse what and where?\n");
             return;
         }
 
@@ -347,17 +362,21 @@ public class Game
         String direction = command.getThirdWord();
 
         if (this.player.openRoom(itemName, direction)) {
-            System.out.println("It worked!");
+            System.out.println("\nIt worked!\n");
         }
         else {
-            System.out.println("So, it didn't work...");
+            System.out.println("\nSo, it didn't work...\n");
         }
 
     }
 
+    /**
+     * Build an item with your collected items at a workbench
+     * @param command
+     */
     private void build(Command command){
         if (!command.hasSecondWord()){
-            System.out.println("Build what?");
+            System.out.println("\nBuild what?\n");
             return;
         }
 

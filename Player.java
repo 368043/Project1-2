@@ -42,7 +42,7 @@ public class Player {
 
         if (newRoom instanceof LockedRoom) {
             if (((LockedRoom) newRoom).isLocked()) {
-                System.out.println("Room is locked. Try to use items to open the door!");
+                System.out.println("\nRoom is locked.\nTry to use items to open the door!\n");
                 return false;
             }
             else {
@@ -138,7 +138,7 @@ public class Player {
             return false;
         }
         else if (tempItem==null){
-            System.out.println("You don't have this item.");
+            System.out.println("\nYou don't have this item.\n");
             return false;
         }
         else {
@@ -147,7 +147,7 @@ public class Player {
                     return true;
                 }
                 else {
-                    System.out.println("Can't open room with this item");
+                    System.out.println("\nCan't open room with this item\n");
                     return false;
                 }
             }
@@ -157,28 +157,35 @@ public class Player {
         }
     }
 
+    /**
+     * Prints info of workbench if it exist
+     */
     public void lookWorkbench(){
         System.out.println(this.currentRoom.getWorkbenchString());
     }
 
+    /**
+     * Builds an item at a workbench with your collected components
+     * @param item String of name of item that you want to build
+     */
     public void buildItem(String item){
         if (this.currentRoom.workbenchCheck()){
             if (this.currentRoom.getItemName().equals(item)){
                 Item result = this.currentRoom.buildItem(this.backpack.getItems());
                 if (result == null){
-                    System.out.println("You don't have all the components\n");
+                    System.out.println("\nYou don't have all the components\n");
                 }else {
                     for (String v: this.currentRoom.getComponents()){
                         this.backpack.removeItem(this.backpack.getItemByString(v));
                     }
                     this.backpack.addItem(result);
-                    System.out.println("Successfully build " + result.getName() + ".\nLook in your backpack.");
+                    System.out.println("\nSuccessfully build " + result.getName() + ".\nLook in your backpack.\n");
                 }
             }else {
-                System.out.println("Can't build " + item + " at this workbench" );
+                System.out.println("\nCan't build " + item + " at this workbench\n");
             }
         }else {
-            System.out.println("No workbench here");
+            System.out.println("\nNo workbench here\n");
         }
 
     }

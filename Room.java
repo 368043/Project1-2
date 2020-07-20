@@ -145,6 +145,10 @@ public class Room
         return false;
     }
 
+    /**
+     * Checks if room contains workbench
+     * @return true or false
+     */
     public boolean workbenchCheck(){
         if (this.workbench == null){
             return false;
@@ -153,23 +157,40 @@ public class Room
         }
     }
 
+    /**
+     * Returns a String of the description of the workbench
+     * @return String of description
+     */
     public String getWorkbenchString(){
         if (this.workbench == null){
-            return "This room doesn't contain a workbench";
+            return "\nThis room doesn't contain a workbench\n";
         }else {
             return this.workbench.stringDescription();
         }
 
     }
 
+    /**
+     * Gets name of buildable item of workbench
+     * @return String of name of item
+     */
     public String getItemName(){
         return this.workbench.getItemString();
     }
 
+    /**
+     * Returns an arraylist of the needed components
+     * @return Arraylist with items
+     */
     public ArrayList<String> getComponents(){
         return this.workbench.returnComponents();
     }
 
+    /**
+     * Build the item and return it
+     * @param items Arraylist of components
+     * @return builded item
+     */
     public Item buildItem(ArrayList<Item> items){
         return this.workbench.buildItem(items);
     }
