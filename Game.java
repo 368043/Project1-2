@@ -21,6 +21,7 @@ public class Game
 {
     private Parser parser;
     private Player player;
+    private Room winScenario;
 
     /**
      * Create the game and initialise its internal map.
@@ -54,7 +55,6 @@ public class Game
         cup = new Item("cup", 60);
         lockPicker = new Item("lockpicker", 80);
         key = new Item("key", 50);
-
 
 
         //create components
@@ -119,6 +119,7 @@ public class Game
         office2.setWorkbench(workbench1);
 
         createPlayer(store);  // player starts in store
+        this.winScenario = outside;
     }
 
     /**
@@ -140,17 +141,27 @@ public class Game
 
         boolean finished = false;
 
-        while (!finished) {
+        while (!finished && !checkWin()) {
 
             Command command = parser.getCommand();
             finished = processCommand(command);
 
         }
-
+        if (checkWin()){
+            System.out.println("\nYou did it! You escaped the store before the police came.\nWell done and enjoy your loot.");
+        }
         System.out.println("Thank you for playing.  Good bye.");
 
 
 
+    }
+
+    public boolean checkWin(){
+        if (this.player.getCurrentRoom() == this.winScenario){
+            return true;
+        }else {
+            return false;
+        }
     }
 
     /**
@@ -181,36 +192,17 @@ public class Game
 
         CommandWord commandWord = command.getCommandWord();
 
-        if (commandWord == CommandWord.HELP) {
-            printHelp();
-        }
-        else if (commandWord == CommandWord.GO) {
-            go(command);
-        }
-        else if (commandWord == CommandWord.QUIT) {
-            wantToQuit = quit(command);
-        }
-        else if (commandWord == CommandWord.LOOK) {
-            look(command);
-        }
-        else if (commandWord == CommandWord.GRAB) {
-            grab(command);
-        }
-        else if (commandWord == CommandWord.BACK) {
-            back();
-        }
-        else if (commandWord == CommandWord.DROP) {
-            drop(command);
-        }
-        else if (commandWord == CommandWord.USE) {
-            use(command);
-        }
-        else if (commandWord == CommandWord.BUILD) {
-            build(command);
-        }
-        else if (commandWord == CommandWord.UNKNOWN) {
-            System.out.println("I don't know what you mean...");
-            return false;
+        switch (commandWord){
+            case HELP -> printHelp();
+            case GO -> go(command);
+            case USE -> use(command);
+            case BACK -> back();
+            case DROP -> drop(command);
+            case GRAB -> grab(command);
+            case LOOK -> look(command);
+            case QUIT -> wantToQuit = quit(command);
+            case BUILD -> build(command);
+            case UNKNOWN -> System.out.println("I don't know what you mean...");
         }
 
         return wantToQuit;
@@ -277,16 +269,18 @@ public class Game
             System.out.println("Look where?");
             return;
         }
-        else if (command.getSecondWord().equals("backpack")) {
-            System.out.println(player.getItemsString());
-        }
-        else if (command.getSecondWord().equals("around")) {
-            printLocationInfo();
-        }
-        else if (command.getSecondWord().equals("workbench")) {
-            player.lookWorkbench();
-        }
 
+        switch (command.getSecondWord()){
+            case "backpack":
+                System.out.println(player.getItemsString());
+                break;
+            case "around":
+                printLocationInfo();
+                break;
+            case "workbench":
+                player.lookWorkbench();
+                break;
+        }
     }
 
     /**
