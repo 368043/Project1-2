@@ -147,7 +147,7 @@ public class Game
         boolean finished = false;
 
         while (!finished && !checkWin() && !timer.check()) {
-            Command command = parser.getCommand();
+            Command command = parser.getCommand(this.timer);
             finished = processCommand(command);
 
         }
@@ -177,8 +177,11 @@ public class Game
         }
     }
 
+    /**
+     * prints how much time left
+     */
     private void printTime(){
-        System.out.println(this.timer.getLeftTime());
+        System.out.println("Time left: " + this.timer.getTimeString());
     }
 
     /**

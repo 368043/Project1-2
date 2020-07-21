@@ -33,33 +33,34 @@ public class Parser
     /**
      * @return The next command from the user.
      */
-    public Command getCommand() 
+    public Command getCommand(Timer timer)
     {
-        String inputLine;   // will hold the full input line
-        String word1 = null;
-        String word2 = null;
-        String word3 = null;
 
-        System.out.print("> ");     // print prompt
+            String inputLine;   // will hold the full input line
+            String word1 = null;
+            String word2 = null;
+            String word3 = null;
 
-        inputLine = reader.nextLine();
+            System.out.print("> ");     // print prompt
 
-        // Find up to two words on the line.
-        Scanner tokenizer = new Scanner(inputLine);
-        if(tokenizer.hasNext()) {
-            word1 = tokenizer.next();      // get first word
-            if(tokenizer.hasNext()) {
-                word2 = tokenizer.next();      // get second word
-                if(tokenizer.hasNext()) {
-                    word3 = tokenizer.next();      // get second word
-                    // note: we just ignore the rest of the input line.
+            inputLine = reader.nextLine();
+
+            // Find up to two words on the line.
+            Scanner tokenizer = new Scanner(inputLine);
+            if (tokenizer.hasNext()) {
+                word1 = tokenizer.next();      // get first word
+                if (tokenizer.hasNext()) {
+                    word2 = tokenizer.next();      // get second word
+                    if (tokenizer.hasNext()) {
+                        word3 = tokenizer.next();      // get second word
+                        // note: we just ignore the rest of the input line.
+                    }
                 }
             }
-        }
 
-        // Now check whether this word is known. If so, create a command
-        // with it. If not, create a "null" command (for unknown command).
-        return new Command(commands.getCommandWord(word1), word2, word3);
+            // Now check whether this word is known. If so, create a command
+            // with it. If not, create a "null" command (for unknown command).
+            return new Command(commands.getCommandWord(word1), word2, word3);
     }
 
     /**
