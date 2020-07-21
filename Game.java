@@ -136,6 +136,7 @@ public class Game
      *  Main play routine.  Loops until end of play.
      */
     public void play() {
+
         this.timer.start();
 
         printWelcome();
@@ -145,7 +146,7 @@ public class Game
 
         boolean finished = false;
 
-        while (!finished && !checkWin()) {
+        while (!finished && !checkWin() && !timer.check()) {
             Command command = parser.getCommand();
             finished = processCommand(command);
 
@@ -155,7 +156,7 @@ public class Game
         if (checkWin()){
             System.out.println("You did it!\nYou escaped the store before the police came.\nWell done and enjoy your loot.");
         }
-        else if (timer.isRanOut()){
+        else if (timer.check()){
             System.out.println("HANDS UP! THIS IS THE POLICE. YOU ARE SURROUNDED.\nYou failed to escape the store.\nTry again when you out of jail.");
         }
 
@@ -177,7 +178,7 @@ public class Game
     }
 
     private void printTime(){
-        System.out.println(this.timer.getLeftTimeString());
+        System.out.println(this.timer.getLeftTime());
     }
 
     /**

@@ -1,41 +1,42 @@
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+import java.time.Duration;
+import java.time.Instant;
+
 
 public class Timer {
 
     private int minutesLimit;
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("mmss");
-    private int maxTime;
+    private Instant startTime;
 
     public Timer(int minuteLimit){
-        this.minutesLimit = minuteLimit*100;
+        this.minutesLimit = minuteLimit - 1;
 
-    }
-
-    private int currentTimeInt(){
-        return Integer.parseInt(LocalTime.now().format(formatter));
     }
 
     public void start(){
-        this.maxTime = currentTimeInt() + minutesLimit;
+        this.startTime = Instant.now();
     }
 
-    public boolean isRanOut(){
-        if (getLeftTime() <= 0){
+    private int getPastMinutes(){
+        Duration elapsed = Duration.between(startTime, Instant.now());
+        return elapsed.toMinutesPart();
+    }
+
+    private int getPastSeconds(){
+        Duration elapsed = Duration.between(startTime, Instant.now());
+        return elapsed.toSecondsPart();
+    }
+
+    public boolean check(){
+        if (getPastMinutes() >= minutesLimit){
             return true;
         }else {
             return false;
         }
     }
 
-    private int getLeftTime(){
-        return maxTime - currentTimeInt();
-    }
-
-    public String getLeftTimeString(){
-        String result = Integer.toString(getLeftTime());
-
-        return "Time left: " + result;
+    public String getLeftTime(){
+        String result = "Time left: " + (minutesLimit - getPastMinutes()) + ":" + (60 - getPastSeconds());
+        return result;
     }
 
 }
