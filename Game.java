@@ -21,14 +21,16 @@ public class Game
 {
     private Parser parser;
     private Player player;
+    private Timer timer;
     private Room winScenario;
 
     /**
      * Create the game and initialise its internal map.
      */
-    public Game()
+    public Game(int minutes)
     {
         createGame();
+        this.timer = new Timer(minutes);
         parser = new Parser();
     }
 
@@ -134,6 +136,8 @@ public class Game
      *  Main play routine.  Loops until end of play.
      */
     public void play() {
+        this.timer.start();
+
         printWelcome();
 
         // Enter the main command loop.  Here we repeatedly read commands and
@@ -142,20 +146,21 @@ public class Game
         boolean finished = false;
 
         while (!finished && !checkWin()) {
-
             Command command = parser.getCommand();
             finished = processCommand(command);
 
         }
+
         System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++");
         if (checkWin()){
             System.out.println("You did it!\nYou escaped the store before the police came.\nWell done and enjoy your loot.");
         }
+        else if (timer.isRanOut()){
+            System.out.println("HANDS UP! THIS IS THE POLICE. YOU ARE SURROUNDED.\nYou failed to escape the store.\nTry again when you out of jail.");
+        }
 
         System.out.println("Thank you for playing. Good bye!");
         System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++\n");
-
-
 
     }
 
@@ -163,12 +168,16 @@ public class Game
      * Checks if game has been won
      * @return true or false
      */
-    public boolean checkWin(){
+    private boolean checkWin(){
         if (this.player.getCurrentRoom() == this.winScenario){
             return true;
         }else {
             return false;
         }
+    }
+
+    private void printTime(){
+        System.out.println(this.timer.getLeftTimeString());
     }
 
     /**
@@ -181,13 +190,16 @@ public class Game
         System.out.println("Type '" + CommandWord.HELP.toString() + "' if you need help.");
         System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++\n");
 
+        System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++");
+        printTime();
         printLocationInfo();
+        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++\n");
     }
 
     private void printLocationInfo(){
-        System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++");
+
         System.out.println(player.getCurrentRoom().getLongDescription());
-        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++\n");
+
     }
 
     /**
@@ -202,16 +214,63 @@ public class Game
         CommandWord commandWord = command.getCommandWord();
 
         switch (commandWord){
-            case HELP -> printHelp();
-            case GO -> go(command);
-            case USE -> use(command);
-            case BACK -> back();
-            case DROP -> drop(command);
-            case GRAB -> grab(command);
-            case LOOK -> look(command);
-            case QUIT -> wantToQuit = quit(command);
-            case BUILD -> build(command);
-            case UNKNOWN -> System.out.println("\nI don't know what you mean...\n");
+            case HELP:
+                System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++");
+                printTime();
+                printHelp();
+                System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++\n");
+                break;
+            case GO:
+                System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++");
+                printTime();
+                go(command);
+                System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++\n");
+                break;
+            case USE:
+                System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++");
+                printTime();
+                use(command);
+                System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++\n");
+                break;
+            case BACK:
+                System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++");
+                printTime();
+                back();
+                System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++\n");
+                break;
+            case DROP:
+                System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++");
+                printTime();
+                drop(command);
+                System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++\n");
+                break;
+            case GRAB:
+                System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++");
+                printTime();
+                grab(command);
+                System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++\n");
+                break;
+            case LOOK:
+                System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++");
+                printTime();
+                look(command);
+                System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++\n");
+                break;
+            case QUIT:
+                wantToQuit = quit(command);
+                break;
+            case BUILD:
+                System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++");
+                printTime();
+                build(command);
+                System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++\n");
+                break;
+            case UNKNOWN:
+                System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++");
+                printTime();
+                System.out.println("\nI don't know what you mean...\n");
+                System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++\n");
+                break;
         }
 
         return wantToQuit;
@@ -226,11 +285,10 @@ public class Game
      */
     private void printHelp() 
     {
-        System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++");
         System.out.println("Try to get out of the store as soon as possible.");
         System.out.println("Available command words are:");
         System.out.println(parser.showCommands());
-        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++\n");
+
     }
 
     /** 
@@ -283,17 +341,15 @@ public class Game
 
         switch (command.getSecondWord()){
             case "backpack":
-                System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++");
                 System.out.println(player.getItemsString());
-                System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++\n");
                 break;
             case "around":
                 printLocationInfo();
                 break;
             case "workbench":
-                System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++");
+
                 player.lookWorkbench();
-                System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++\n");
+
                 break;
         }
     }
